@@ -37,6 +37,7 @@ export default Kapsule({
   props: {
     globeImageUrl: {},
     bumpImageUrl: {},
+    alphaImageUrl: {},
     showGlobe: { default: true, onChange(showGlobe, state) { state.globeObj.visible = !!showGlobe }, triggerUpdate: false },
     showGraticules: { default: false, onChange(showGraticules, state) { state.graticulesObj.visible = !!showGraticules }, triggerUpdate: false },
     showAtmosphere: { default: true, onChange(showAtmosphere, state) { state.atmosphereObj && (state.atmosphereObj.visible = !!showAtmosphere) }, triggerUpdate: false },
@@ -119,6 +120,19 @@ export default Kapsule({
       } else {
         state.bumpImageUrl && new THREE.TextureLoader().load(state.bumpImageUrl, texture => {
           globeMaterial.bumpMap = texture;
+          globeMaterial.needsUpdate = true;
+        });
+      }
+    }
+
+    if (changedProps.hasOwnProperty('alphaImageUrl')) {
+      if (!state.alphaImageUrl) {
+        globeMaterial.alphaMap = null;
+        globeMaterial.needsUpdate = true;
+      } else {
+        state.alphaImageUrl && new THREE.TextureLoader().load(state.alphaImageUrl, texture => {
+          globeMaterial.alphaMap = texture;
+          globeMaterial.side = THREE.DoubleSide;
           globeMaterial.needsUpdate = true;
         });
       }
